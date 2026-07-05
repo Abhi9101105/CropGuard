@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const api = axios.create({ baseURL: '/api/v1', timeout: 30000 })
+const apiBase = import.meta.env.VITE_API_URL || ''
+const api = axios.create({ baseURL: `${apiBase}/api/v1`, timeout: 30000 })
 
 api.interceptors.request.use(cfg => {
   const token = localStorage.getItem('cg_token')
@@ -42,7 +43,7 @@ export const scansApi = {
   get:          id => api.get(`/scans/${id}`),
   updateStatus: (id,s) => api.patch(`/scans/${id}/status`, { status:s }),
   delete:       id => api.delete(`/scans/${id}`),
-  imageUrl:     f  => `/uploads/${f}`,
+  imageUrl:     f  => `${apiBase}/uploads/${f}`,
   research: (file, crop='Unknown', language='en') => {
     const f = new FormData()
     f.append('image', file); f.append('crop', crop); f.append('language', language)
